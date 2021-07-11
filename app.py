@@ -19,17 +19,17 @@ def get_file_data(filename):
     file_data_path = "file_data"
     path = file_data_path + "/"+ filename
     try:
-        with open(path, 'r', encoding="utf-8", errors='ignore') as file_data:
+        with open(path, 'r', encoding="utf-16", errors='ignore') as file_data:
             for item in file_data:
                 results.append(item)
         return render_template('index.html',lines=results[start:end+1])
     except Exception as e:
            return render_template('error.html', error = str(e))
-
-    # file_data = open(path, 'r', encoding="utf-16", errors='ignore')
-    # for item in file_data:
-    #     results.append(item)
-    # return render_template('index.html',lines=results[start:end+1])
+    finally:
+        file_data = open(path, 'r', encoding="utf-8", errors='ignore')
+        for item in file_data:
+            results.append(item)
+        return render_template('index.html',lines=results[start:end+1])
 
 
 
