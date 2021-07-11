@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template
 from datetime import datetime
 import json
+import codecs
 
 app = Flask(__name__,template_folder='templates')
 
@@ -19,17 +20,19 @@ def get_file_data(filename):
     file_data_path = "file_data"
     path = file_data_path + "/"+ filename
     try:
-        with open(path, 'r', encoding="utf-16", errors='ignore') as file_data:
+        try:
+            with open(path, 'r', encoding="utf-8") as file_data:
+                for item in file_data:
+                    results.append(item)
+            return render_template('index.html',lines=results[start:end+1])
+        except:
+            file_data = open(path, 'r', encoding="utf-16")
             for item in file_data:
                 results.append(item)
-        return render_template('index.html',lines=results[start:end+1])
+            return render_template('index.html',lines=results[start:end+1])
     except Exception as e:
-           return render_template('error.html', error = str(e))
-    finally:
-        file_data = open(path, 'r', encoding="utf-8", errors='ignore')
-        for item in file_data:
-            results.append(item)
-        return render_template('index.html',lines=results[start:end+1])
+           return render_template('error.html', error = str(e), filename=filename)
+
 
 
 
